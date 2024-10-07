@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floating Chat</title>
+    <style>
+        /* Add your CSS here */
+        .chat-box {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .chat-header {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .chat-body {
+            padding: 10px;
+            height: calc(100% - 60px);
+            overflow-y: auto;
+        }
+        .chat-footer {
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+        .chat-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button class="chat-toggle">Chat</button>
+    <div class="chat-box">
+        <div class="chat-header">Chat Support</div>
+        <div class="chat-body"></div>
+        <div class="chat-footer">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+    <script>
+      document.getElementById('send-btn').addEventListener('click', () => {
+    const message = document.getElementById('chat-input').value;
+    if (message.trim() !== '') {
+        sendMessageToServer(message);
+        document.getElementById('chat-input').value = '';
+    }
+});
+
+function sendMessageToServer(message) {
+    fetch('https://your-cloudflare-worker-url', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Message sent:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+        // Add your JavaScript here
+        const chatToggle = document.querySelector('.chat-toggle');
+        const chatBox = document.querySelector('.chat-box');
+        chatToggle.addEventListener('click', () => {
+            chatBox.style.display = chatBox.style.display === 'none' ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>
